@@ -151,9 +151,10 @@ resource "aws_iam_policy" "cf-deployer" {
 }
 
 resource "aws_iam_user_policy_attachment" "main" {
-  policy_arn = aws_iam_policy.main.arn
+  policy_arn = aws_iam_policy.cf-deployer.arn
   user = aws_iam_user.cf-deployer.name
 }
+
 
 resource "aws_iam_access_key" "cf-deployer" {
   user = aws_iam_user.cf-deployer.name
@@ -179,7 +180,7 @@ resource "aws_ecs_task_definition" "service" {
 
   container_definitions = jsonencode([{
     name: "first",
-    image: aws_ecr_repository.main.repository_url,
+    image: "${aws_ecr_repository.main.repository_url}:master"
     cpu: 256,
     memory: 512,
     essential: true,
